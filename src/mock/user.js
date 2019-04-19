@@ -1,0 +1,22 @@
+import Mock from 'mockjs'
+import { doCustomTimes } from '@/libs/util'
+const Random = Mock.Random
+
+export const getMessageInit = () => {
+  let unreadList = []
+  doCustomTimes(3, () => {
+    unreadList.push(Mock.mock({
+      title: Random.cword(10, 15),
+      create_time: '@date',
+      msg_id: Random.increment(100)
+    }))
+  })
+  let readedList = []
+  doCustomTimes(4, () => {
+    readedList.push(Mock.mock({
+      title: Random.cword(10, 15),
+      create_time: '@date',
+      msg_id: Random.increment(100)
+    }))
+  })
+}
