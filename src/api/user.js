@@ -28,3 +28,11 @@ export const logout = (token) => {
     method: 'post'
   })
 }
+
+export const getCodeImg=()=>{
+  return axios.request({
+    url:'/captcha',
+    method:'get',
+    responseType: 'arraybuffer'
+  })
+}

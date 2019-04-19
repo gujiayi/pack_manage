@@ -14,12 +14,21 @@
         </span>
       </Input>
     </FormItem>
+    <FormItem prop="captcha">
+      <Input  v-model="form.captcha" placeholder="请输入验证码">
+        <span slot="append">
+          <img :src="form.imgUrl" style="width:60px;" >
+        </span>
+      </Input>
+    </FormItem>
     <FormItem>
       <Button @click="handleSubmit" type="primary" long>登录</Button>
     </FormItem>
   </Form>
 </template>
 <script>
+import axios from 'axios'
+import {getCodeImg} from '@/api/user'
 export default {
   name: 'LoginForm',
   props: {
@@ -44,7 +53,9 @@ export default {
     return {
       form: {
         userName: 'super_admin',
-        password: ''
+        password: '',
+        captcha:'',
+        imgUrl:'',
       }
     }
   },
@@ -56,7 +67,19 @@ export default {
       }
     }
   },
+  created(){
+    this.getCaptcha();
+  },
   methods: {
+    getCaptcha(){
+      getCodeImg().then(res=>{
+        console.log(res)
+         this.form.imgUrl=  'data:image/png;base64,' + btoa(
+         new Uint8Array(res.data).reduce((data, byte) => data + String.fromCharCode(byte), ''))
+         console.log(this.form.imgUrl)
+      })
+    },
+    
     handleSubmit () {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
