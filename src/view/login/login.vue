@@ -7,10 +7,10 @@
     <div class="login-con">
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
-          <login-form @on-success-valid="handleSubmit"></login-form>
+          <login-form @on-success-valid="handleSubmit" ref="loginForm"></login-form>
         </div>
         <div class="form-con">
-          <p class="error">{{error}}</p>
+          <p class="error" style="color:red">{{error}}</p>
         </div>
       </Card>
     </div>
@@ -42,6 +42,7 @@ export default {
           })
         } else {
           this.error = res.msg;
+          this.$refs.loginForm.getCaptcha();
         }
       });
     }

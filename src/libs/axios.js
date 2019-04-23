@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import router from '@/router'
 import { Message } from 'iview'
 const LOGIN_PAGE_NAME = 'login'
 const addErrorLog = errorInfo => {
@@ -47,8 +48,8 @@ class HttpRequest {
     })
     // 响应拦截
     instance.interceptors.response.use(res => {
-      if(res.data.code===1000){
-        this.$router.push({
+      if(res.data.code===10000){
+        router.push({
           name: LOGIN_PAGE_NAME
         })
       }

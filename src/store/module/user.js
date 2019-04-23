@@ -71,7 +71,7 @@ export default {
           getUserInfo(state.token).then(res => {
             const data = res.data
             commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
+            commit('setUserName', data.username)
             commit('setUserId', data.user_id)
             commit('setAccess', data.access)
             commit('setHasGetInfo', true)

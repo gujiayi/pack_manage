@@ -7,6 +7,19 @@ export const getUserData = () => {
   })
 }
 
+export const readUser = ({
+  user_id
+}) => {
+  const data = {
+    user_id
+  }
+  return axios.request({
+    url: '/admin/user/read',
+    data,
+    method: 'post'
+  })
+}
+
 export const DeleteUser = ({
   user_id
 }) => {
