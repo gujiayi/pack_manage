@@ -7,7 +7,7 @@ import { setToken, getToken } from '@/libs/util'
 
 export default {
   state: {
-    userName: '',
+    username: '',
     userId: '',
     avatarImgPath: '',
     token: getToken(),
@@ -22,7 +22,7 @@ export default {
       state.userId = id
     },
     setUserName (state, name) {
-      state.userName = name
+      state.username = name
     },
     setAccess (state, access) {
       state.access = access
@@ -39,16 +39,16 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin ({ commit }, { userName, password }) {
-      userName = userName.trim()
+    handleLogin ({ commit }, { username, password, captcha }) {
+      username = username.trim()
       return new Promise((resolve, reject) => {
         login({
-          userName,
-          password
+          username,
+          password,
+          captcha
         }).then(res => {
           const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          resolve(data)
         }).catch(err => {
           reject(err)
         })
@@ -57,17 +57,11 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
+        logout().then(() => {
           resolve()
         }).catch(err => {
           reject(err)
-        })
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
+        })       
       })
     },
     // 获取用户相关信息

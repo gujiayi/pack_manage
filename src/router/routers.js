@@ -74,7 +74,7 @@ export default [
     name: 'components',
     meta: {
       icon: 'logo-buffer',
-      title: '打包管理'
+      title: '菜单管理'
     },
     component: Main,
     children: [

@@ -1,6 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
-// import { Spin } from 'iview'
+import { Message } from 'iview'
+const LOGIN_PAGE_NAME = 'login'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
   let info = {
@@ -46,6 +47,11 @@ class HttpRequest {
     })
     // 响应拦截
     instance.interceptors.response.use(res => {
+      if(res.data.code===1000){
+        this.$router.push({
+          name: LOGIN_PAGE_NAME
+        })
+      }
       this.destroy(url)
       const { data, status } = res
       return { data, status }

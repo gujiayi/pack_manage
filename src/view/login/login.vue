@@ -1,5 +1,5 @@
 <style lang="less">
-  @import './login.less';
+@import "./login.less";
 </style>
 
 <template>
@@ -8,7 +8,9 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+        </div>
+        <div class="form-con">
+          <p class="error">{{error}}</p>
         </div>
       </Card>
     </div>
@@ -16,30 +18,36 @@
 </template>
 
 <script>
-import LoginForm from '_c/login-form'
-import { mapActions } from 'vuex'
+import LoginForm from "_c/login-form";
+import {getUserInfo} from "@/api/user";
+import { mapActions } from "vuex";
 export default {
   components: {
     LoginForm
   },
+  data() {
+    return {
+      error: ""
+    }
+  },
   methods: {
-    ...mapActions([
-      'handleLogin',
-      'getUserInfo'
-    ]),
-    handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+    ...mapActions(["handleLogin", " getUserInfo"]),
+    handleSubmit({ username, password, captcha }){
+      this.handleLogin({ username, password, captcha }).then(res => {
+        if (res.code === 0) {
+         getUserInfo().then(res => {
+            this.$router.push({
+              name: this.$config.homeName
+            })
           })
-        })
-      })
+        } else {
+          this.error = res.msg;
+        }
+      });
     }
   }
 }
 </script>
 
 <style>
-
 </style>

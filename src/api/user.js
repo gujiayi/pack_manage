@@ -1,38 +1,58 @@
 import axios from '@/libs/api.request'
 
-export const login = ({ userName, password }) => {
+export const login = ({
+  username,
+  password,
+  captcha
+}) => {
   const data = {
-    userName,
-    password
+    username,
+    password,
+    captcha
   }
   return axios.request({
-    url: 'login',
+    url: '/admin/login/index',
     data,
     method: 'post'
   })
 }
 
-export const getUserInfo = (token) => {
+export const getUserInfo = () => {
   return axios.request({
-    url: 'get_info',
-    params: {
-      token
-    },
-    method: 'get'
+    url: 'admin/user/self',
+    method: 'post'
   })
 }
 
 export const logout = (token) => {
   return axios.request({
-    url: 'logout',
+    url: 'admin/logout/index',
     method: 'post'
   })
 }
 
-export const getCodeImg=()=>{
+export const getCodeImg = () => {
   return axios.request({
-    url:'/captcha',
-    method:'get',
+    url: '/captcha',
+    method: 'get',
     responseType: 'arraybuffer'
   })
 }
+  //修改密码
+  export const modify_password = ({
+    old_password,
+    new_password,
+    re_password
+  }) => {
+    const data = {
+      old_password,
+      new_password,
+      re_password
+    }
+    return axios.request({
+      url: '/admin/user/modify_password',
+      data,
+      method: 'post'
+    })
+  }
+
