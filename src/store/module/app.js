@@ -75,27 +75,27 @@ export default {
         setTagNavListInLocalstorage([...state.tagNavList])
       }
     },
-    addError (state, error) {
-      state.errorList.push(error)
-    },
+    // addError (state, error) {
+    //   state.errorList.push(error)
+    // },
     setHasReadErrorLoggerStatus (state, status = true) {
       state.hasReadErrorPage = status
     }
   },
   actions: {
-    addErrorLog ({ commit, rootState }, info) {
-      if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
-      const { user: { token, userId, username } } = rootState
-      let data = {
-        ...info,
-        time: Date.parse(new Date()),
-        token,
-        userId,
-        username
-      }
-      saveErrorLogger(info).then(() => {
-        commit('addError', data)
-      })
-    }
+    // addErrorLog ({ commit, rootState }, info) {
+    //   if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
+    //   const { user: { token, userId, username } } = rootState
+    //   let data = {
+    //     ...info,
+    //     time: Date.parse(new Date()),
+    //     token,
+    //     userId,
+    //     username
+    //   }
+    //   saveErrorLogger(info).then(() => {
+    //     commit('addError', data)
+    //   })
+    // }
   }
 }

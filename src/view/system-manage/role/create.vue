@@ -3,7 +3,7 @@
   <Button @click="handelCreate" class="search-btn" type="default">
     <Icon type="add"/>&nbsp;&nbsp;添加
   </Button>
-  <Modal v-model="modal" title="添加" @on-ok="okSubmit('form')" @on-cancel="cancel('form')">
+  <Modal v-model="modal" title="添加">
   <Form ref="form" :model="formValidate" :rules="ruleValidate" :label-width="80" >
     <FormItem label="角色名" prop="name">
       <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
@@ -30,6 +30,10 @@
        <Tree :data="data2" show-checkbox></Tree>
     </FormItem>
   </Form>
+  <div slot="footer">
+    <Button type="text" size="large" @click="cancel()">取消</Button>
+    <Button type="primary" size="large"  @click="ok_Submit()" >确定</Button>
+  </div>
   </Modal>
   </span>
 </template>
@@ -106,30 +110,33 @@ export default {
     handelCreate(){
       this.modal=true;
     },
-    okSubmit(name){
-       this.$refs.form.validate((valid) => {
+    ok_Submit(){
+        this.$refs.formValidate.validate((valid) => {
         if (valid) {
-          let data={
+         let data={
             username: this.formValidate.username,
             realname:this.formValidate.realname,
             status:this.formValidate.status,
             password:this.formValidate.password,
             re_password:this.formValidate.re_password,
             email:this.formValidate.email,
-            roles:this.formValidate.role,
+            roles:this.formValidate.roles
           }
-          createUser(data).then(res=>{
-            if(res.code===1){
-              this.$Message.success('新增成功');
-            }
-          })
+        createUser(data).then(res=>{
+          if(res.data.code===0){
+            this.$Message.success('新增成功');
+            this.modal = !this.modal;
+            this.$refs.formValidate.resetFields();
+            this.$emit("okSubmit")
+          }
+        })
         }
-        this.$refs.form.resetFields();
        })
       
     },
-    cancel(name){
-      this.$refs.form.resetFields();
+    cancel(){
+      this.modal = !this.modal;
+      this.$refs.formValidate.resetFields();
     },
   }
 }

@@ -88,8 +88,27 @@ export const getRolesData = () => {
   })
 }
 
+export const readRole = ({
+    role_id
+  }) => {
+  const data = {
+    role_id
+  }
+  return axios.request({
+    url: '/admin/role/read',
+    data,
+    method: 'post'
+  })
+}
 
 
+export const getMenuData = ()=>{
+    return axios.request({
+    url: '/admin/menu/select',
+    method: 'post',
+    stauts:'1',
+  })
+}
 
 
 
@@ -113,14 +132,6 @@ export const getDragList = () => {
 export const errorReq = () => {
   return axios.request({
     url: 'error_url',
-    method: 'post'
-  })
-}
-
-export const saveErrorLogger = info => {
-  return axios.request({
-    url: 'save_error_logger',
-    data: info,
     method: 'post'
   })
 }

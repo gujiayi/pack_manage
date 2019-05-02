@@ -10,14 +10,14 @@
       >
         <template slot="select">
           <Select v-model="searchKey" class="search-col" placeholder="角色">
-            <Option  v-for="item in roles" :value="item.value" :key="item.value" @on-change="searchRole">{{item.value}}</Option>
+            <Option  v-for="item in roles" :value="item.value" :key="item.value" @on-change="searchRole">{{item.label}}</Option>
           </Select>
         </template>
         <template slot="add">
          <create :roles="roles"  @okSubmit="ok_Sub()"></create>
         </template>
       </tables>
-      <Modal v-model="modal"   @on-cancel="cancel('currentForm')" title="修改"> 
+      <Modal v-model="modal"   title="修改"> 
        <Form ref="currentForm" :model="currentForm" :rules="ruleValidate" :label-width="80">
         <FormItem label="用户名" prop="username">
           <Input v-model="currentForm.username" placeholder="Enter your username"></Input>
@@ -181,7 +181,6 @@ export default {
       readUser({user_id}).then(res=>{
         this.currentForm=res.data.data
         this.currentForm.status?this.currentForm.status=true:this.currentForm.status=false
-         console.log(this.currentForm)
       })
     },
     changeStatus(status){
