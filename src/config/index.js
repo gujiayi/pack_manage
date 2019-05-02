@@ -11,7 +11,7 @@ export default {
    * @description api请求基础路径
    */
   baseUrl: {
-    dev: 'http://p4ckage.qiyouworld.com',
+    dev: 'http://192.168.11.197:8080/api',
     pro: 'http://p4ckage.qiyouworld.com'
   },
   /**
