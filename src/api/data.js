@@ -110,7 +110,102 @@ export const getMenuData = ()=>{
   })
 }
 
+export const getMasterPackageData = ()=>{
+  return axios.request({
+  url: '/admin/master_package/select',
+  method: 'post'
+})
+}
 
+export const createMasterPackage = ({
+  name,
+  apk_name,
+  path
+}) => {
+  const data = {
+    name,
+    apk_name,
+    path
+  }
+  return axios.request({
+    url: '/admin/master_package/create',
+    data,
+    method: 'post'
+  })
+}
+export const readMasterPackage = ({
+  id
+}) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: '/admin/master_package/read',
+    data,
+    method: 'post'
+  })
+}
+export const updataMasterPackage = ({
+  id,
+  name,
+  apk_name,
+  path,
+  status
+}) => {
+  const data = {
+    id,
+    name,
+    apk_name,
+    path,
+    status
+  }
+  return axios.request({
+    url: '/admin/master_package/update',
+    data,
+    method: 'post'
+  })
+}
+
+export const DeleteMasterPackage = ({
+  id
+}) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: '/admin/master_package/delete',
+    data,
+    method: 'post'
+  })
+}
+
+
+export const getTaskData = ()=>{
+  return axios.request({
+  url: '/admin/task/select',
+  method: 'post'
+})
+}
+
+export const readTask = ({
+  id
+}) => {
+  const data = {
+    id
+  }
+  return axios.request({
+    url: '/admin/task/read?',
+    data,
+    method: 'post'
+  })
+}
+
+export const getTaskTypeData = ()=>{
+  return axios.request({
+  url: '/admin/task_type/select',
+  method: 'post'
+})
+}
 
 
 

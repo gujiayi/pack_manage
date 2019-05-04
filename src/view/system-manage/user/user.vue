@@ -3,8 +3,6 @@
     <Card>
       <tables
         ref="tables"
-        searchable
-        search-place="top"
         v-model="tableData"
         :columns="columns"
       >
@@ -14,47 +12,26 @@
           </Select>
         </template>
         <template slot="add">
-         <create :roles="roles"  @okSubmit="ok_Sub()"></create>
+         <create :roles="roles"  @okSubmit="ok_Sub()">添加</create>
         </template>
       </tables>
-      <Modal v-model="modal"   title="修改"> 
-       <Form ref="currentForm" :model="currentForm" :rules="ruleValidate" :label-width="80">
-        <FormItem label="用户名" prop="username">
-          <Input v-model="currentForm.username" placeholder="Enter your username"></Input>
-        </FormItem>
-        <FormItem label="真实名称" prop="realname">
-          <Input v-model="currentForm.realname" placeholder="Enter your realname"></Input>
-        </FormItem>
-        <FormItem label="email" prop="email">
-          <Input v-model="currentForm.email" placeholder="Enter your email"></Input>
-        </FormItem>
-        <FormItem label="角色" >
-          <Select v-model="currentForm.roles" multiple  placeholder="Select your roles" >
-            <Option  v-for="item in roles" :value="item.value" :key="item.value">{{item.label}}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="状态" >
-          <i-switch v-model="currentForm.status" @on-change="changeStatus" />
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="text" size="large" @click="cancel('currentForm')">取消</Button>
-        <Button type="primary" size="large"  @click="ok('currentForm')" >确定</Button>
-      </div>
-      </Modal>
+      <vform @cancelForm="cancel" ref='form' @submitForm="submit" :modal='modal' :roles="roles" :currentForm="formValidate">
+      </vform>
     </Card>
   </div>
 </template>
 
 <script>
 import Tables from "_c/tables";
-import { getUserData,getRolesData,DeleteUser,updataUser,readUser} from "@/api/data";
-import create from "./create.vue";
+import { getUserData,getRolesData,DeleteUser,updataUser,readUser} from "@/api/data"
+import create from "./create.vue"
+import vform from "./form.vue"
 export default {
   name: "tables_page",
   components: {
     Tables,
-    create
+    create,
+    vform
   },
   data() {
     return {
@@ -63,16 +40,10 @@ export default {
       tableData: [],
       roles:[],
       currentUserId:'',
-      currentForm: {
-        user_id:"",
-        username: "",
-        realname: "",
-        roles:[],
-        status:true,
-        email:''
+      formValidate: {
       },
       columns: [
-        // { title:'ID',key:'user_id' },
+        { title:'ID',key:'user_id' },
         { title: "用户名", key: "username" },
         { title: "真实名称", key: "realname" },
         { title: "ip", key: "ip" },
@@ -109,7 +80,7 @@ export default {
                       },
                       on: {
                           click: () => {
-                             this.show(params.index)
+                             this.handleUpdata(params.index)
                           }
                       }
                   }, '修改'),
@@ -143,75 +114,38 @@ export default {
           }
         }
       ],
-      ruleValidate: {
-        username: [
-          {
-            required: true,
-            message: "The username cannot be empty",
-            trigger: "blur"
-          }
-        ],
-         realname: [
-          {
-            required: true,
-            message: "The realname cannot be empty",
-            trigger: "blur"
-          }
-        ],
-        email: [
-          { required: true, message: 'Mailbox cannot be empty', trigger: 'blur' },
-          { type: 'email', message: 'Incorrect email format', trigger: 'blur' }
-        ],
-        roles: [
-          { required: true, message: "roles cannot be empty", trigger: "blur" }
-        ]
-      },
-      //  roles: [
-      //   {type: 'array', required: true, message: 'Please select the roles' }
-      // ],
+      
     }
   },
   methods: {
     ok_Sub(){
       this.getDataList();
     },
-    show(index) {
+    handleUpdata(index) {
       this.modal = !this.modal;
       let user_id=this.tableData[index].user_id;
       readUser({user_id}).then(res=>{
-        this.currentForm=res.data.data
-        this.currentForm.status?this.currentForm.status=true:this.currentForm.status=false
+        this.formValidate=res.data.data
+        this.formValidate.status?this.formValidate.status=true:this.formValidate.status=false
       })
     },
-    changeStatus(status){
-      this.currentForm.status=status
-    },
-    ok(name){
-       this.$refs[name].validate((valid) => {
-        if (valid) {
-          let data={
-            user_id:this.currentForm.user_id ,
-            username: this.currentForm.username,
-            realname:this.currentForm.realname,
-            status:this.currentForm.status?"1":0,
-            email:this.currentForm.email,
-            roles:this.currentForm.roles,
-          }
-          updataUser(data).then(res=>{
-            if(res.data.code===0){
-              this.getDataList();
-              this.$Message.success('修改成功');
-              this.modal = !this.modal;
-              this.$refs[name].resetFields();
-            }
-          })
+   
+    submit(modal,data){
+      updataUser(data).then(res=>{
+        if(res.data.code===0){
+          this.modal = modal;
+          this.$Message.success('修改成功');
+          this.$refs.form.$refs.formValidate.resetFields();
+          this.getDataList();
+          this.$emit("okSubmit")
+        }else{
+           this.$Message.error(res.data.msg);
         }
-      
-       })
+      })
     },
-    cancel(name){
-     this.$refs[name].resetFields();
-      this.modal = !this.modal;
+   
+    cancel(modal){
+      this.modal = modal;
     },
     handleDelete(index) {
       this.currentUserId=this.tableData[index].user_id

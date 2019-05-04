@@ -4,8 +4,6 @@
       <tables
         ref="tables"
         editable
-        searchable
-        search-place="top"
         v-model="tableData"
         :columns="columns"
       >
@@ -54,11 +52,11 @@ export default {
       searchKey: "",
       modal:false,
       columns: [
-        // {
-        //   title:'roleId',
-        //   width:150,
-        //   key:'role_id'
-        // },
+        {
+          title:'roleId',
+          width:150,
+          key:'role_id'
+        },
         { title: "角色名称", key: "name" },
         { title: "角色描述", key: "description" },
         { title: "角色用户数", key: "users_count" },

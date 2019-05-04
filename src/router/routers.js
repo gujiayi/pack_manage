@@ -79,13 +79,13 @@ export default [
     component: Main,
     children: [
       {
-        path: 'mother',
-        name: 'mother',
+        path: 'masterPackage',
+        name: 'masterPackage',
         meta: {
           icon: 'md-grid',
           title: '母包管理'
         },
-        component: () => import('@/view/components/mother/mother.vue')
+        component: () => import('@/view/components/masterPackage/masterPackage.vue')
       },
       {
         path: 'channel',
@@ -96,15 +96,7 @@ export default [
         },
         component: () => import('@/view/components/channel/channel.vue')
       },
-      {
-        path: 'task',
-        name: 'task',
-        meta: {
-          icon: 'md-grid',
-          title: '任务队列'
-        },
-        component: () => import('@/view/components/task/task.vue')
-      }
+     
     ]
   },
   {
@@ -141,11 +133,29 @@ export default [
     name: 'log-manage',
     meta: {
       icon: 'logo-buffer',
-      title: '日志管理'
+      title: '任务管理'
     },
     showAlways:true,
     component: Main,
     children: [
+      {
+        path: 'task',
+        name: 'task',
+        meta: {
+          icon: 'md-grid',
+          title: '任务队列'
+        },
+        component: () => import('@/view/log-manage/task/task.vue')
+      },
+      {
+        path: 'taskType',
+        name: 'taskType',
+        meta: {
+          icon: 'md-grid',
+          title: '任务类型'
+        },
+        component: () => import('@/view/log-manage/taskType/taskType.vue')
+      },
       {
         path: 'log',
         name: 'log',
