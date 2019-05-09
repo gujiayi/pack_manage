@@ -6,11 +6,6 @@
         v-model="tableData"
         :columns="columns"
       >
-        <template slot="select">
-          <Select v-model="searchKey" class="search-col" placeholder="角色">
-            <Option  v-for="item in roles" :value="item.value" :key="item.value" @on-change="searchRole">{{item.label}}</Option>
-          </Select>
-        </template>
         <template slot="add">
          <create :roles="roles"  @okSubmit="ok_Sub()">添加</create>
         </template>
@@ -159,7 +154,6 @@ export default {
         }
       })
     },
-    searchRole(){},
     getDataList(){
       getUserData().then(res => {
         this.$nextTick(()=>{

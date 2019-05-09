@@ -8,32 +8,11 @@
         :columns="columns"
       >
        <template slot='add'>
-         <create>sffdf</create>
+        <create :routes="routes" ref="form"  @okSubmit="ok_Sub()">添加</create>
        </template>
       </tables>
-       <Modal v-model="modal"  title="修改"> 
-       <Form ref="currentForm" :model="currentForm" :rules="ruleValidate" :label-width="80">
-        <FormItem label="用户名" prop="name">
-          <Input v-model="currentForm.name" placeholder="Enter your name"></Input>
-        </FormItem>
-        <FormItem label="排序" prop="ordid">
-          <Input v-model="currentForm.ordid" placeholder="Enter your ordid"></Input>
-        </FormItem>
-        <FormItem label="状态" >
-          <i-switch v-model="currentForm.status" @on-change="changeStatus" />
-        </FormItem>
-        <FormItem label="路由权限">
-          <Tree :data="routes1"  multiple></Tree>
-        </FormItem>
-        <FormItem label="路由权限">
-          <Tree :data="routes1"  multiple></Tree>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="text" size="large" @click="cancel('currentForm')">取消</Button>
-        <Button type="primary" size="large"  @click="ok('currentForm')" >确定</Button>
-      </div>
-      </Modal>
+       <vform @cancelForm="cancel" :title="title" ref='form' :modal='modal' :routes="routes" :currentForm="formValidate" @submitForm="submit">
+      </vform>
     </Card>
   </div>
 </template>
@@ -41,16 +20,19 @@
 <script>
 import create from "./create.vue"
 import Tables from "_c/tables";
-import { getRolesData,readRole ,getMenuData} from "@/api/data";
+import vform from "./form"
+import { getRolesData,readRole ,updataRole,getMenuTreeData,DeleteRole} from "@/api/data";
 export default {
   components: {
     Tables,
-    create
+    create,
+    vform
   },
   data() {
     return {
       searchKey: "",
       modal:false,
+      title:"修改",
       columns: [
         {
           title:'roleId',
@@ -75,149 +57,113 @@ export default {
         },
         { title: "排序", key: "ordid" ,sortable: true},
         {
-          title: "操作",
-          key: "action",
-          width: 100,
+          title: '操作',
+          key: 'action',
+          width: 150,
           render: (h, params) => {
-            return h("div", [
-              h(
-                "Button",
-                {
-                  props: {
-                    type: "primary",
-                    size: "small"
-                  },
-                  style: {
-                    marginRight: "5px"
-                  },
-                  on: {
-                    click: () => {
-                      this.show(params.index);
-                    }
-                  }
-                },
-                "修改"
-              )
-            ]);
+              let data=params;
+              return h('div', [
+                  h('Button', {
+                      props: {
+                          type: 'primary',
+                          size: 'small',
+                      },
+                      style: {
+                          marginRight: '5px'
+                      },
+                      on: {
+                          click: () => {
+                             this.handleUpdata(params.index)
+                          }
+                      }
+                  }, '修改'),
+                  h('Poptip', {
+                      props:{
+                          title:'您确定要删除吗',
+                          confirm:true
+                      },
+                      on:{
+                          'on-ok': ()=>{
+                            this.handelDeleteOk()
+                          }
+                      }
+                  },[
+                      h('Button', {
+                          props: {
+                              type: 'error',
+                              size: 'small'
+                          },
+                          style: {
+                              marginRight: '5px'
+                          },
+                          on: {
+                              click: () => {
+                                  this.handleDelete(params.index)
+                              }
+                          }
+                      }, '删除'),
+                  ])
+              ])
           }
         }
       ],
-      currentForm: {
+      formValidate: {
         name: "",
         users_count: "",
         status:false,
         ordid:1
       },
-      ruleValidate: {
-        name: [
-          {
-            required: true,
-            message: "The roleName cannot be empty",
-            trigger: "blur"
-          }
-        ],
-         description: [
-          {
-            required: true,
-            message: "The roleDesc cannot be empty",
-            trigger: "blur"
-          }
-        ],
-        users_count: [
-          { required: true, message: "roleCount cannot be empty", trigger: "blur" }
-        ]
-      },
-      
       tableData: [],
-      routes1: [
-                    {
-                        title: 'parent 1',
-                        selected: true,
-                        children: [
-                            {
-                                title: 'parent 1-1',
-                                children: [
-                                    {
-                                        title: 'leaf 1-1-1',
-                                        disabled: true
-                                    },
-                                    {
-                                        title: 'leaf 1-1-2'
-                                    }
-                                ]
-                            },
-                            {
-                                title: 'parent 1-2',
-                                children: [
-                                    {
-                                        title: 'leaf 1-2-1',
-                                        checked: true
-                                    },
-                                    {
-                                        title: 'leaf 1-2-1'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
+      routes: []
     };
   },
   methods: {
      ok_Sub(){
       this.getDataList();
     },
-    show(index) {
+     handleUpdata(index) {
       this.modal = !this.modal;
       let role_id=this.tableData[index].role_id;
       readRole({role_id}).then(res=>{
-        this.currentForm=res.data.data
-        this.currentForm.status?this.currentForm.status=true:this.currentForm.status=false
+        this.formValidate=res.data.data
+        this.formValidate.status?this.formValidate.status=true:this.formValidate.status=false
       })
     },
-    changeStatus(status){
-      this.currentForm.status=status
-    },
-    ok(name){
-       this.$refs[name].validate((valid) => {
-        if (valid) {
-          let data={
-            user_id:this.currentForm.user_id ,
-            username: this.currentForm.username,
-            realname:this.currentForm.realname,
-            status:this.currentForm.status?"1":0,
-            email:this.currentForm.email,
-            roles:this.currentForm.roles,
-          }
-          updataUser(data).then(res=>{
-            if(res.data.code===0){
-              this.getDataList();
-              this.$Message.success('修改成功');
-              this.modal = !this.modal;
-              this.$refs[name].resetFields();
-            }
-          })
+    submit(modal,data){
+      updataRole(data).then(res=>{
+        if(res.data.code===0){
+          this.modal = modal;
+          this.$Message.success('修改成功');
+         this.$refs.form.$refs.formValidate.resetFields();
+          this.getDataList();
+          this.$emit("okSubmit")
+        }else{
+           this.$Message.error(res.data.msg);
         }
-      
-       })
+      })
     },
-    cancel(name){
-     this.$refs[name].resetFields();
-      this.modal = !this.modal;
+   
+    cancel(modal){
+      this.modal = modal;
     },
     handleDelete(index) {
-      this.currentUserId=this.tableData[index].user_id
+      this.currentUserId=this.tableData[index].role_id
     },
     handelDeleteOk(){
-      let user_id=this.currentUserId;
-      DeleteUser({user_id}).then(res=>{
+      let role_id=this.currentUserId;
+      DeleteRole({role_id}).then(res=>{
         if(res.data.code===0){
           this.$Message.success(res.data.msg)
           this.getDataList();
         }
       })
     },
-    searchRole(){},
+    getRouterlist(){
+      getMenuTreeData().then(res=>{
+        this.routes=res.data.data
+        console.log(this.routes)
+      })    
+    },
     getDataList(){
       getRolesData().then(res => {
         this.$nextTick(()=>{
@@ -226,18 +172,9 @@ export default {
     });
     },
   },
-  mounted() {
+  created() {
+    this.getRouterlist();
     this.getDataList();
-    getMenuData().then(res=>{
-      console.log(res)
-      let data=res.data.data;
-      let arr=[];
-      data.map((item,index)=>{
-        arr.push({"value":item.role_id,"label":item.name})
-      })
-      this.roles=arr;
-     })
-   
   }
 };
 </script>

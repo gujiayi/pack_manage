@@ -84,7 +84,7 @@ export const getRolesData = () => {
   return axios.request({
     url: '/admin/role/select',
     method: 'post',
-    stauts:'1',
+    status:'1',
   })
 }
 
@@ -101,12 +101,68 @@ export const readRole = ({
   })
 }
 
+export const createRole = ({
+  name,
+  ordid,
+  status,
+  routes
+}) => {
+  const data = {
+    name,
+    ordid,
+    status,
+    routes
+  }
+  return axios.request({
+    url: '/admin/role/create',
+    data,
+    method: 'post'
+  })
+}
 
-export const getMenuData = ()=>{
+export const updataRole = ({
+  role_id,
+  name,
+  ordid,
+  status,
+  routes
+}) => {
+  const data = {
+    role_id,
+    name,
+    ordid,
+    status,
+    routes
+  }
+  return axios.request({
+    url: '/admin/role/update',
+    data,
+    method: 'post'
+  })
+}
+
+export const DeleteRole = ({
+  role_id
+}) => {
+  const data = {
+    role_id
+  }
+  return axios.request({
+    url: '/admin/role/delete',
+    data,
+    method: 'post'
+  })
+}
+
+
+
+
+
+export const getMenuTreeData = ()=>{
     return axios.request({
-    url: '/admin/menu/select',
+    url: '/admin/menu/access_menu',
     method: 'post',
-    stauts:'1',
+    status:'1',
   })
 }
 
@@ -194,7 +250,7 @@ export const readTask = ({
     id
   }
   return axios.request({
-    url: '/admin/task/read?',
+    url: '/admin/task/read',
     data,
     method: 'post'
   })
@@ -208,8 +264,86 @@ export const getTaskTypeData = ()=>{
 }
 
 
+//menu
+export const getMenuData = () => {
+  return axios.request({
+    url: '/admin/menu/select',
+    method: 'post',
+    status:'1',
+  })
+}
+export const readMenu = ({
+  menu_id
+}) => {
+  const data = {
+    menu_id
+  }
+  return axios.request({
+    url: '/admin/menu/read',
+    data,
+    method: 'post'
+  })
+}
+export const DeleteMenu = ({
+  menu_id
+}) => {
+  const data = {
+    menu_id
+  }
+  return axios.request({
+    url: '/admin/menu/delete',
+    data,
+    method: 'post'
+  })
+}
+export const createMenu = ({
+  route,
+  name
+}) => {
+  const data = {
+    route,
+    name
+  }
+  return axios.request({
+    url: '/admin/menu/create',
+    data,
+    method: 'post'
+  })
+}
+export const updataMenu = ({
+  menu_id,
+  route,
+  name
+}) => {
+  const data = {
+    menu_id,
+    route,
+    name
+  }
+  return axios.request({
+    url: '/admin/menu/update',
+    data,
+    method: 'post'
+  })
+}
+//chart图表
 
-
+export const getChart = ({
+  route,
+  start_date,
+  end_date
+}) => {
+  const data = {
+    route,
+    start_date,
+    end_date
+  }
+  return axios.request({
+    url: '/admin/menu/graph',
+    data,
+    method: 'post'
+  })
+}
 
 
 

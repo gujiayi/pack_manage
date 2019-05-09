@@ -55,7 +55,7 @@ export default {
           areaStyle: { normal: {
             color: '#2d8cf0'
           } },
-          data: [120, 132, 101, 134, 90, 230, 210]
+          data: [350, 132, 101, 134, 90, 230, 210]
         },
         {
           name: '银行/证券',

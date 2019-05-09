@@ -74,7 +74,7 @@ export default [
     name: 'components',
     meta: {
       icon: 'logo-buffer',
-      title: '菜单管理'
+      title: '包管理'
     },
     component: Main,
     children: [
@@ -129,6 +129,36 @@ export default [
     ]
   },
   {
+    path: '/menu-manage',
+    name: 'menu-manage',
+    meta: {
+      icon: 'logo-buffer',
+      title: '菜单管理'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'menu',
+        name: 'menu',
+        meta: {
+          icon: 'md-grid',
+          title: '菜单管理'
+        },
+        component: () => import('@/view/menu-manage/menu/menu.vue')
+      },
+      {
+        path: 'menuChart',
+        name: 'menuChart',
+        meta: {
+          icon: 'md-grid',
+          title: '接口访问线性',
+          hideInMenu: true
+        },
+        component: () => import('@/view/menu-manage/menuChart/menuChart.vue')
+      }
+    ]
+  },
+  {
     path: '/log-manage',
     name: 'log-manage',
     meta: {
@@ -161,7 +191,7 @@ export default [
         name: 'log',
         meta: {
           icon: 'md-grid',
-          title: '任务日志'
+          title: '任务日志',
         },
         component: () => import('@/view/log-manage/log/log.vue')
       }

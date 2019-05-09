@@ -37,7 +37,6 @@ export default {
   methods:{
     handelCreate(){
       this.modal=!this.modal;
-      console.log(this.modal)
     },
     submit(modal,data){
       createUser(data).then(res=>{

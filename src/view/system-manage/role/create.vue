@@ -3,50 +3,25 @@
   <Button @click="handelCreate" class="search-btn" type="default">
     <Icon type="add"/>&nbsp;&nbsp;添加
   </Button>
-  <Modal v-model="modal" title="添加">
-  <Form ref="form" :model="formValidate" :rules="ruleValidate" :label-width="80" >
-    <FormItem label="角色名" prop="name">
-      <Input v-model="formValidate.name" placeholder="Enter your name"></Input>
-    </FormItem>
-    <FormItem label="排序" prop="ordid">
-      <Input  v-model="formValidate.ordid" placeholder="Enter your ordid"></Input>
-    </FormItem>
-    <FormItem label="状态" >
-      <Switch v-model="formValidate.status" @on-change="changeStatus()" />
-    </FormItem>
-   <FormItem label="搜索">
-      <Tree :data="data2" show-checkbox></Tree>
-    </FormItem>
-    <FormItem label="列表" >
-      <Tree :data="data2" show-checkbox></Tree>
-    </FormItem>
-     <FormItem label="新增" >
-      <Tree :data="data2" show-checkbox></Tree>
-    </FormItem>
-    <FormItem label="修改" >
-      <Tree :data="data2" show-checkbox></Tree>
-    </FormItem>
-    <FormItem label="删除" >
-       <Tree :data="data2" show-checkbox></Tree>
-    </FormItem>
-  </Form>
-  <div slot="footer">
-    <Button type="text" size="large" @click="cancel()">取消</Button>
-    <Button type="primary" size="large"  @click="ok_Submit()" >确定</Button>
-  </div>
-  </Modal>
+   <vform @cancelForm="cancel" :title="title" ref='form' @submitForm="submit" :modal='modal' :routes="routes" :currentForm="formValidate">
+   </vform>
   </span>
 </template>
 <script>
-import {createUser} from "@/api/data";
+import {createRole} from "@/api/data";
+import vform from './form'
 export default {
   props:{
-    roles:{
+    routes:{
       type:Array
     }
   },
+  components:{
+    vform
+  },
   data(){
     return{
+      title:'添加',
       data2: [
           {
               title: 'parent 1',
@@ -110,33 +85,21 @@ export default {
     handelCreate(){
       this.modal=true;
     },
-    ok_Submit(){
-        this.$refs.formValidate.validate((valid) => {
-        if (valid) {
-         let data={
-            username: this.formValidate.username,
-            realname:this.formValidate.realname,
-            status:this.formValidate.status,
-            password:this.formValidate.password,
-            re_password:this.formValidate.re_password,
-            email:this.formValidate.email,
-            roles:this.formValidate.roles
-          }
-        createUser(data).then(res=>{
-          if(res.data.code===0){
-            this.$Message.success('新增成功');
-            this.modal = !this.modal;
-            this.$refs.formValidate.resetFields();
-            this.$emit("okSubmit")
-          }
-        })
+    submit(modal,data){
+      createRole(data).then(res=>{
+        console.log(res.data)
+        if(res.data.code===0){
+          this.modal = modal;
+          this.$Message.success('新增成功');
+          this.$refs.form.$refs.formValidate.resetFields();
+          this.$emit("okSubmit")
+        }else{
+          this.$Message.error(res.data.msg);
         }
-       })
-      
+      })
     },
     cancel(){
       this.modal = !this.modal;
-      this.$refs.formValidate.resetFields();
     },
   }
 }

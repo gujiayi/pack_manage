@@ -12,7 +12,7 @@
         <Input type="password" v-model="formCustom.re_password"></Input>
       </FormItem>
       <FormItem>
-      <Button @click="handleSubmit" type="primary" long>登录</Button>
+      <Button @click="handleSubmit" type="primary" long>修改</Button>
     </FormItem>
     <p clsaa="error" style="color:red">{{formCustom.error}}</p>
     </Form>
