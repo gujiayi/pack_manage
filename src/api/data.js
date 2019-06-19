@@ -169,7 +169,8 @@ export const getMenuTreeData = ()=>{
 export const getMasterPackageData = ()=>{
   return axios.request({
   url: '/admin/master_package/select',
-  method: 'post'
+  method: 'post',
+  status:'1',
 })
 }
 
@@ -251,6 +252,24 @@ export const readTask = ({
   }
   return axios.request({
     url: '/admin/task/read',
+    data,
+    method: 'post'
+  })
+}
+export const createTask = ({
+    master_package_id,
+    name,
+    type_id,
+    task_data
+}) => {
+  const data = {
+    master_package_id,
+    name,
+    type_id,
+    task_data
+  }
+  return axios.request({
+    url: '/admin/task/create',
     data,
     method: 'post'
   })
